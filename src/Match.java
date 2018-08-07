@@ -8,15 +8,23 @@ public class Match {
     public Map<String,Integer> playerName= new HashMap<>();
     private int set_score[ ]={0,0};
     private int game_score[ ]={0,0};
-    private int points_score[ ]={0,0};
+    private int points[ ]={0,0};
 
     Match(){
         this.playerName.put("A",0);
         this.playerName.put("B",1);
     }
 
-    private boolean checkPoints(int playerId){
-        return true;
+    private boolean checkPoints(int currentPlayer){
+        int opponentPlayer=(currentPlayer+1)%2;
+        if(points[currentPlayer] > 3 && points[opponentPlayer] < 3 ){
+            return true;
+        }
+        else if(points[currentPlayer]>5){
+            return true;
+        }
+
+        return false;
     }
 
     private boolean checkGame(int playerId){
@@ -26,8 +34,9 @@ public class Match {
     public void updateScore(String point){
 
         int playerId=playerName.get(point);
-        points_score[playerId]++;
-
+        points[playerId]++;
+        if( (points[playerId]==points[(playerId+1)%2] ) && points[playerId]==5)
+            points[0]=points[1]=4;
         if(checkPoints(playerId)){
             game_score[playerId]++;
             //reset point
