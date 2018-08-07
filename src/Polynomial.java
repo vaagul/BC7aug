@@ -100,15 +100,13 @@ public class Polynomial {
         return result;
     }
 
-    // todo: return Polynomial object
     public Polynomial addPoly(Polynomial p1){
 
         Map<Integer, Integer> tmp = addPolyUtil(this.mapPoly,p1.mapPoly);
         return new Polynomial(tmp,findMaxDegree(tmp));
     }
 
-    // todo: return Polynomial object
-    public Map<Integer,Integer> subPoly(Polynomial p1){
+    public Polynomial subPoly(Polynomial p1){
         Map<Integer,Integer> result= new HashMap<>();
 
         for(Map.Entry<Integer,Integer> entry : p1.mapPoly.entrySet()){
@@ -129,7 +127,7 @@ public class Polynomial {
             }
         }
 
-        return result;
+        return new Polynomial(result,findMaxDegree(result));
     }
 
     private static int findMaxDegree(Map<Integer, Integer> a)
@@ -188,8 +186,6 @@ public class Polynomial {
     {
         int divisorDegree = p1.degree;
         int dividendDegree = p2.degree;
-
-
         return (dividendDegree >= divisorDegree && dividendDegree != -1 && divisorDegree != -1);
     }
 
