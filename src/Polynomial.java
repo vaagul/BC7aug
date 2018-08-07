@@ -17,7 +17,7 @@ public class Polynomial {
 
     public Polynomial(Map<Integer, Integer> poly, int degree)
     {
-        this.mapPoly = poly;
+        this.mapPoly.putAll(poly);
         this.degree = degree;
     }
 
@@ -92,7 +92,7 @@ public class Polynomial {
             }
         }
 
-        for(Map.Entry<Integer,Integer> entry : p2.entrySet()){
+        for(Map.Entry<Integer, Integer> entry : p2.entrySet()){
             if(p1.get(entry.getKey())==null){
                 result.put(entry.getKey(),entry.getValue());
             }
@@ -101,9 +101,10 @@ public class Polynomial {
     }
 
     // todo: return Polynomial object
-    public Map<Integer,Integer> addPoly(Polynomial p1){
+    public Polynomial addPoly(Polynomial p1){
 
-        return addPolyUtil(this.mapPoly,p1.mapPoly);
+        Map<Integer, Integer> tmp = addPolyUtil(this.mapPoly,p1.mapPoly);
+        return new Polynomial(tmp,findMaxDegree(tmp));
     }
 
     // todo: return Polynomial object
@@ -131,7 +132,7 @@ public class Polynomial {
         return result;
     }
 
-    private static int findDegree(Map<Integer, Integer> a)
+    private static int findMaxDegree(Map<Integer, Integer> a)
     {
         int max = minDegree;
         for(Map.Entry<Integer, Integer> entry : a.entrySet())
@@ -180,10 +181,10 @@ public class Polynomial {
             tmp = multiplyUtil(b, (Integer) pair.getValue(), (Integer) pair.getKey());
             res = addPolyUtil(res, tmp);
         }
-        return new Polynomial(res, findDegree(res));
+        return new Polynomial(res, findMaxDegree(res));
     }
 
-    /*private static boolean isDivisible(Polynomial p1, Polynomial p2)
+    private static boolean isDivisible(Polynomial p1, Polynomial p2)
     {
         int divisorDegree = p1.degree;
         int dividendDegree = p2.degree;
@@ -194,14 +195,12 @@ public class Polynomial {
 
     public Map<Integer,Integer> divPoly(Polynomial p1) {
         // Map<Integer, Integer> divisor = p1.mapPoly;
-        int divisorDegree = p1.getDegree();
-        int dividendDegree = this.getDegree();
-
+        int divisorDegree = p1.degree;
+        int dividendDegree = this.degree;
         while (dividendDegree >= divisorDegree && dividendDegree != -1 && divisorDegree != -1)
         {
 
         }
-
         return new HashMap<>();
-    }*/
+    }
 }

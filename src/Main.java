@@ -6,6 +6,6 @@ public class Main {
         String inputString2= new String("3x^2 + 2x + 4x^4 -3 + 6x^5");
         Polynomial p1=new Polynomial(inputString);
         Polynomial p2=new Polynomial(inputString2);
-        Polynomial result= new Polynomial(p1.addPoly(p2));
+        Polynomial result= p1.addPoly(p2);
     }
 }
