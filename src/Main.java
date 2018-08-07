@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Main {
 
     public static void PolynomialCode(){
@@ -11,6 +13,20 @@ public class Main {
     }
 
     public static void TennisScore(){
+
+        Scanner sc=new Scanner(System.in);
+
+        String sequence=sc.nextLine();
+        int len=sequence.length();
+        Match m=new Match();
+
+        for(int i=0;i<len;i++)
+        {
+            char c=sequence.charAt(i);
+            m.updateScore(c+"");
+        }
+
+        m.printScoreCard();
 
     }
 

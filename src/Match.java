@@ -8,7 +8,7 @@ public class Match {
     public Map<String,Integer> playerName= new HashMap<>();
     private int set_score[ ]={0,0};
     private int game_score[ ]={0,0};
-    private int points_score[ ]={0,0};
+    private int points[ ]={0,0};
 
     Match(){
         this.playerName.put("A",0);
@@ -26,7 +26,7 @@ public class Match {
     public void updateScore(String point){
 
         int playerId=playerName.get(point);
-        points_score[playerId]++;
+        points[playerId]++;
 
         if(checkPoints(playerId)){
             game_score[playerId]++;
@@ -42,6 +42,16 @@ public class Match {
     }
 
     public void printScoreCard(){
+
+        System.out.print("Player:\t");
+        for(Map.Entry<String, Integer> entry : playerName.entrySet())
+        {
+            System.out.print(entry.getKey()+"\t");
+        }
+
+        System.out.println("Sets:\t"+set_score[0]+"\t"+set_score[1]);
+        System.out.println("Games:\t"+game_score[0]+"\t"+game_score[1]);
+        System.out.println("Point:\t"+points[0]+"\t"+points[1]);
 
     }
 }
