@@ -54,7 +54,25 @@ public class Polynomial {
     }
 
     public String convert2string(Map<Integer,Integer> mapPoly){
-        return new String();
+
+        String str=new String();
+
+        for(Map.Entry<Integer,Integer> entry : mapPoly.entrySet()){
+
+            int val=entry.getValue();
+            int degree= entry.getKey();
+            if(val>0)
+            {
+                if(entry.getKey()==0)
+                    str=str+ "+"+entry.getValue()+" ";
+                else if(entry.getValue()==1)
+                    str=str+ "+" +entry.getValue() +"x ";
+                else
+                    str= str + "+" +entry.getValue() + "x^"+entry.getKey()+" ";
+            }
+        }
+        str= str.replace("+-","-");
+        return str;
     }
 
     // todo: remove zero coefficent terms
