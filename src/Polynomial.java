@@ -1,6 +1,4 @@
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Polynomial {
@@ -10,9 +8,19 @@ public class Polynomial {
     private int degree = minDegree;
     public Map<Integer,Integer> mapPoly= new HashMap<>();
 
+    public Polynomial(Polynomial p)
+    {
+        this.mapPoly.putAll(p.mapPoly);
+        this.degree = p.degree;
+    }
+
     public Polynomial(String rawPoly) {
         this.rawPoly = rawPoly.replace(" ","");
         convert2map(this.rawPoly);
+    }
+
+    public Polynomial(){
+
     }
 
     public Polynomial(Map<Integer, Integer> poly, int degree)
@@ -118,6 +126,7 @@ public class Polynomial {
         return new Polynomial(tmp,findMaxDegree(tmp));
     }
 
+
     public Polynomial subPoly(Polynomial p1){
         Map<Integer,Integer> result= new HashMap<>();
 
@@ -194,21 +203,40 @@ public class Polynomial {
         return new Polynomial(res, findMaxDegree(res));
     }
 
-    private static boolean isDivisible(Polynomial p1, Polynomial p2)
+    private static boolean isDivisible(Polynomial dividend, Polynomial divisor)
     {
-        int divisorDegree = p1.degree;
-        int dividendDegree = p2.degree;
+        int divisorDegree = divisor.degree;
+        int dividendDegree = dividend.degree;
+
         return (dividendDegree >= divisorDegree && dividendDegree != -1 && divisorDegree != -1);
     }
 
-    public Map<Integer,Integer> divPoly(Polynomial p1) {
-        // Map<Integer, Integer> divisor = p1.mapPoly;
-        int divisorDegree = p1.degree;
-        int dividendDegree = this.degree;
-        while (dividendDegree >= divisorDegree && dividendDegree != -1 && divisorDegree != -1)
-        {
+    public void divPoly(Polynomial p1) {
 
+        Polynomial rem = new Polynomial(this);
+        Polynomial quotient = new Polynomial();
+        Polynomial tmpPoly = new Polynomial();
+
+        int divisorDegree = p1.degree;
+        int dividendDegree;
+        int tmpDegree;
+        Map<Integer, Integer> tmpMap = new HashMap<>();
+
+        while(isDivisible(rem, p1))
+        {
+            dividendDegree = rem.degree;
+            tmpDegree = dividendDegree - divisorDegree;
+
+            tmpMap.clear();
+            tmpMap.put(rem.mapPoly.get(rem.degree) / p1.mapPoly.get(p1.degree), tmpDegree);
+            tmpPoly = new Polynomial(tmpMap, tmpDegree);
+            rem = rem.subPoly(p1.multPoly(tmpPoly));
+
+            quotient.addPoly(tmpPoly);
         }
-        return new HashMap<>();
+        System.out.println("Quotient: " + convert2string(quotient.mapPoly) + "\n" + "Remainder: " + convert2string(rem.mapPoly));
+        //return new HashMap<Polynomial, Polynomial>().put(quotient, rem);
     }
+
+
 }
