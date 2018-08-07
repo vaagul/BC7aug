@@ -7,13 +7,14 @@ public class Polynomial {
 
     private final static int minDegree = -1;
     public static  String rawPoly = new String();
-    private static int degree =0;
+    private int degree = minDegree;
     public Map<Integer,Integer> mapPoly= new HashMap<>();
 
     public Polynomial(String rawPoly) {
         this.rawPoly = rawPoly.replace(" ","");
         convert2map(this.rawPoly);
     }
+
     public Polynomial(Map<Integer, Integer> poly, int degree)
     {
         this.mapPoly = poly;
@@ -43,10 +44,11 @@ public class Polynomial {
                 else
                     this.mapPoly.put(1,Integer.parseInt(subPoly[0]));
             }
-            else{
+            else if(!poly.equalsIgnoreCase("")){
+                if(degree<0)
+                    degree=0;
                 this.mapPoly.put(0,Integer.parseInt(poly));
             }
-
         }
 
     }
@@ -55,15 +57,14 @@ public class Polynomial {
         return new String();
     }
 
-
-    public Map<Integer,Integer> addPoly(Polynomial p1){
-
+    // todo: remove zero coefficent terms
+    private  Map<Integer,Integer> addPolyUtil(Map<Integer,Integer> p1,Map<Integer,Integer> p2){
         Map<Integer,Integer> result= new HashMap<>();
 
-        for(Map.Entry<Integer,Integer> entry : p1.mapPoly.entrySet()){
-            if(this.mapPoly.get(entry.getKey()) != null)
+        for(Map.Entry<Integer,Integer> entry : p1.entrySet()){
+            if(p2.get(entry.getKey()) != null)
             {
-                int z= this.mapPoly.get(entry.getKey());
+                int z= p2.get(entry.getKey());
                 int y= entry.getValue();
                 result.put(entry.getKey(), z+y);
             }
@@ -73,14 +74,21 @@ public class Polynomial {
             }
         }
 
-        for(Map.Entry<Integer,Integer> entry : this.mapPoly.entrySet()){
-            if(p1.mapPoly.get(entry.getKey())==null){
+        for(Map.Entry<Integer,Integer> entry : p2.entrySet()){
+            if(p1.get(entry.getKey())==null){
                 result.put(entry.getKey(),entry.getValue());
             }
         }
         return result;
     }
 
+    // todo: return Polynomial object
+    public Map<Integer,Integer> addPoly(Polynomial p1){
+
+        return addPolyUtil(this.mapPoly,p1.mapPoly);
+    }
+
+    // todo: return Polynomial object
     public Map<Integer,Integer> subPoly(Polynomial p1){
         Map<Integer,Integer> result= new HashMap<>();
 
@@ -152,12 +160,12 @@ public class Polynomial {
         {
             Map.Entry pair = (Map.Entry)mapItr.next();
             tmp = multiplyUtil(b, (Integer) pair.getValue(), (Integer) pair.getKey());
-            res = addPolyUtil(res, tmp); // todo: addPoly calls addPolyUtil with maps as args
+            res = addPolyUtil(res, tmp);
         }
         return new Polynomial(res, findDegree(res));
     }
 
-    private static boolean isDivisible(Polynomial p1, Polynomial p2)
+    /*private static boolean isDivisible(Polynomial p1, Polynomial p2)
     {
         int divisorDegree = p1.degree;
         int dividendDegree = p2.degree;
@@ -177,5 +185,5 @@ public class Polynomial {
         }
 
         return new HashMap<>();
-    }
+    }*/
 }
