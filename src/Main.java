@@ -7,5 +7,6 @@ public class Main {
         Polynomial p1=new Polynomial(inputString);
         Polynomial p2=new Polynomial(inputString2);
         Polynomial result= p1.addPoly(p2);
+        result.printPoly();
     }
 }

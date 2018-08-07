@@ -19,10 +19,22 @@ public class Polynomial {
     {
         this.mapPoly.putAll(poly);
         this.degree = degree;
+        this.rawPoly=convert2string(mapPoly);
     }
 
     public Polynomial(Map<Integer,Integer> poly){
         this.mapPoly.putAll(poly);
+        this.rawPoly=convert2string(mapPoly);
+    }
+
+    public void printPoly(){
+
+        if(rawPoly.charAt(0)=='+')
+        {
+            System.out.println(rawPoly.substring(1));
+        }
+        else
+            System.out.println(rawPoly);
     }
 
     private void convert2map(String rawPoly){
