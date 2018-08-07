@@ -73,11 +73,11 @@ public class Polynomial {
 
             int val=entry.getValue();
             int degree= entry.getKey();
-            if(val>0)
+            if(val!=0)
             {
                 if(entry.getKey()==0)
                     str=str+ "+"+entry.getValue()+" ";
-                else if(entry.getValue()==1)
+                else if(entry.getValue()==1 || entry.getKey()==1)
                     str=str+ "+" +entry.getValue() +"x ";
                 else
                     str= str + "+" +entry.getValue() + "x^"+entry.getKey()+" ";
