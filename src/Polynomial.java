@@ -30,7 +30,10 @@ public class Polynomial {
                 String [ ] subPoly=poly.split(Pattern.quote("x"));
                 if(degree<1)
                     degree=1;
-                this.mapPoly.put(1,Integer.parseInt(subPoly[0]));
+                if(subPoly[0] == null)
+                    this.mapPoly.put(1,1);
+                else
+                    this.mapPoly.put(1,Integer.parseInt(subPoly[0]));
             }
             else{
                 this.mapPoly.put(0,Integer.parseInt(poly));
