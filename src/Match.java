@@ -8,7 +8,7 @@ public class Match {
     public Map<String,Integer> playerName= new HashMap<>();
     private int set_score[ ]={0,0};
     private int game_score[ ]={0,0};
-    private int points_score[ ]={0,0};
+    private int points[ ]={0,0};
 
     Match(){
         this.playerName.put("A",0);
@@ -20,22 +20,23 @@ public class Match {
     }
 
     private boolean checkGame(int playerId){
-        return true;
+        return (game_score[playerId] >= 6 && game_score[playerId] - game_score[(playerId + 1) % 2] >= 2);
     }
 
     public void updateScore(String point){
 
         int playerId=playerName.get(point);
-        points_score[playerId]++;
+        points[playerId]++;
 
         if(checkPoints(playerId)){
             game_score[playerId]++;
             //reset point
+            points[0] = points[1] = 0;
 
             if(checkGame(playerId)){
                 set_score[playerId]++;
                 //reset game
-
+                game_score[0] = game_score[1] = 0;
             }
         }
 
