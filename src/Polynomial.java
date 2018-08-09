@@ -1,4 +1,5 @@
 import java.util.*;
+import javafx.util.Pair;
 import java.util.regex.Pattern;
 
 public class Polynomial {
@@ -20,7 +21,8 @@ public class Polynomial {
     }
 
     public Polynomial(){
-
+        this.degree = 0;
+        this.mapPoly.put(0, 0);
     }
 
     public Polynomial(Map<Integer, Integer> poly, int degree)
@@ -37,6 +39,8 @@ public class Polynomial {
 
     public void printPoly(){
 
+        this.rawPoly = convert2string(mapPoly);
+        if(rawPoly.isEmpty()) return;
         if(rawPoly.charAt(0)=='+')
         {
             System.out.println(rawPoly.substring(1));
@@ -85,10 +89,11 @@ public class Polynomial {
             {
                 if(entry.getKey()==0)
                     str=str+ "+"+entry.getValue()+" ";
-                else if(entry.getValue()==1 || entry.getKey()==1)
+                else if(entry.getKey()==1)
                     str=str+ "+" +entry.getValue() +"x ";
                 else
                     str= str + "+" +entry.getValue() + "x^"+entry.getKey()+" ";
+                System.out.print("");
             }
         }
         str= str.replace("+-","-");
@@ -96,7 +101,7 @@ public class Polynomial {
     }
 
     // todo: remove zero coefficent terms
-    private  Map<Integer,Integer> addPolyUtil(Map<Integer,Integer> p1,Map<Integer,Integer> p2){
+    private  Map<Integer,Integer> addPolyUtil(Map<Integer,Integer> p1, Map<Integer,Integer> p2){
         Map<Integer,Integer> result= new HashMap<>();
 
         for(Map.Entry<Integer,Integer> entry : p1.entrySet()){
@@ -122,8 +127,8 @@ public class Polynomial {
 
     public Polynomial addPoly(Polynomial p1){
 
-        Map<Integer, Integer> tmp = addPolyUtil(this.mapPoly,p1.mapPoly);
-        return new Polynomial(tmp,findMaxDegree(tmp));
+        Map<Integer, Integer> tmp = addPolyUtil(this.mapPoly, p1.mapPoly);
+        return new Polynomial(tmp, findMaxDegree(tmp));
     }
 
 
@@ -133,18 +138,19 @@ public class Polynomial {
         for(Map.Entry<Integer,Integer> entry : p1.mapPoly.entrySet()){
             if(this.mapPoly.get(entry.getKey()) != null)
             {
-                int x= this.mapPoly.get(entry.getKey());
-                int y= entry.getValue();
-                result.put(entry.getKey(), x-y);
+                int x = this.mapPoly.get(entry.getKey());
+                int y = entry.getValue();
+                if(x - y != 0)
+                    result.put(entry.getKey(), x-y);
             }
             else{
-                result.put(entry.getKey(), entry.getValue());
+                result.put(entry.getKey(), -1 * entry.getValue());
             }
         }
 
         for(Map.Entry<Integer,Integer> entry : this.mapPoly.entrySet()){
             if(p1.mapPoly.get(entry.getKey())==null){
-                result.put(entry.getKey(), entry.getValue() * (-1));
+                result.put(entry.getKey(), entry.getValue());
             }
         }
 
@@ -160,6 +166,17 @@ public class Polynomial {
                 max = (Integer) entry.getKey();
         }
         return max;
+    }
+
+    private void setMaxDegree()
+    {
+        int max = minDegree;
+        for(Map.Entry<Integer, Integer> entry : mapPoly.entrySet())
+        {
+            if(max < entry.getKey() && entry.getValue() != 0)
+                max = (Integer) entry.getKey();
+        }
+        this.degree = max;
     }
 
     private int getCoefficent(int degree)
@@ -211,31 +228,42 @@ public class Polynomial {
         return (dividendDegree >= divisorDegree && dividendDegree != -1 && divisorDegree != -1);
     }
 
-    public void divPoly(Polynomial p1) {
+    public Pair<Polynomial, Polynomial> divPoly(Polynomial p1) {
+        this.setMaxDegree();
+        p1.setMaxDegree();
 
         Polynomial rem = new Polynomial(this);
         Polynomial quotient = new Polynomial();
-        Polynomial tmpPoly = new Polynomial();
+        Polynomial tmpPoly;
 
         int divisorDegree = p1.degree;
         int dividendDegree;
+
         int tmpDegree;
+        int tmpValue;
         Map<Integer, Integer> tmpMap = new HashMap<>();
 
         while(isDivisible(rem, p1))
         {
             dividendDegree = rem.degree;
             tmpDegree = dividendDegree - divisorDegree;
-
+            tmpValue = rem.mapPoly.get(rem.degree) / p1.mapPoly.get(p1.degree);
+            if(tmpValue * p1.mapPoly.get(p1.degree) != rem.mapPoly.get(rem.degree)) {
+                System.out.println("Only integer division allowed!\n\nPartial results:");
+                break;
+            }
             tmpMap.clear();
-            tmpMap.put(rem.mapPoly.get(rem.degree) / p1.mapPoly.get(p1.degree), tmpDegree);
+            tmpMap.put(tmpDegree, tmpValue);
             tmpPoly = new Polynomial(tmpMap, tmpDegree);
-            rem = rem.subPoly(p1.multPoly(tmpPoly));
 
-            quotient.addPoly(tmpPoly);
+            // p1.multPoly(tmpPoly).printPoly();
+            rem = rem.subPoly(p1.multPoly(tmpPoly));
+            rem.setMaxDegree();
+
+            quotient = quotient.addPoly(tmpPoly);
         }
-        System.out.println("Quotient: " + convert2string(quotient.mapPoly) + "\n" + "Remainder: " + convert2string(rem.mapPoly));
-        //return new HashMap<Polynomial, Polynomial>().put(quotient, rem);
+
+        return new Pair<>(quotient, rem);
     }
 
 
