@@ -33,9 +33,9 @@ public class Main {
         Scanner sc=new Scanner(System.in);
 
         String sequence=sc.nextLine();
+        //String sequence="ABAABBABABABBB";
         int len=sequence.length();
         Match m=new Match();
-
         for(int i=0;i<len;i++)
         {
             char c=sequence.charAt(i);

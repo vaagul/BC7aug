@@ -15,8 +15,16 @@ public class Match {
         this.playerName.put("B",1);
     }
 
-    private boolean checkPoints(int playerId){
-        return true;
+    private boolean checkPoints(int currentPlayer){
+        int opponentPlayer=(currentPlayer+1)%2;
+        if(points[currentPlayer] > 3 && points[opponentPlayer] < 3 ){
+            return true;
+        }
+        else if(points[currentPlayer]>5){
+            return true;
+        }
+
+        return false;
     }
 
     private boolean checkGame(int playerId){
@@ -27,7 +35,8 @@ public class Match {
 
         int playerId=playerName.get(point);
         points[playerId]++;
-
+        if( (points[playerId]==points[(playerId+1)%2] ) && (points[playerId]==5 || points[playerId] == 3))
+            points[0]=points[1]=4;
         if(checkPoints(playerId)){
             game_score[playerId]++;
             //reset point
@@ -47,12 +56,12 @@ public class Match {
         System.out.print("Player:\t");
         for(Map.Entry<String, Integer> entry : playerName.entrySet())
         {
-            System.out.print(entry.getKey()+"\t");
+            System.out.print(entry.getKey()+"\t\t");
         }
 
-        System.out.println("Sets:\t"+set_score[0]+"\t"+set_score[1]);
-        System.out.println("Games:\t"+game_score[0]+"\t"+game_score[1]);
-        System.out.println("Point:\t"+points[0]+"\t"+points[1]);
+        System.out.println("\nSets:\t"+set_score[0]+"\t\t"+set_score[1]);
+        System.out.println("Games:\t"+game_score[0]+"\t\t"+game_score[1]);
+        System.out.println("Point:\t"+score[points[0]]+"\t"+score[points[1]]);
 
     }
 }
